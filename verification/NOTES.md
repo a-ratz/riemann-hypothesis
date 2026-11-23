@@ -92,6 +92,19 @@ independent kernels.
 
 A text search is not a proof. The axiom check and kernel replay in Comparator are.
 
+**Pull requests.** `risky-constructs.yml` runs
+[`scripts/risky-constructs.py`](../scripts/risky-constructs.py) on every pull request. It fails a
+pull request that adds, to a Lean file under `src/`, one of the constructs in the script's list:
+`sorry`, the `stop` tactic, `admit`, a declared axiom, `native_decide`, `implemented_by`, `extern`,
+`unsafe`, `opaque`, a `debug.*` option, `skipKernelTC`, `addDecl`, `modifyEnv`, `run_cmd`, `#eval`
+and `initialize`, with their variants. Comments and string literals are not read, and
+`src/Challenge.lean` is left out. In the rest of the current tree the script finds none of these.
+Three of them (`addDecl`, `modifyEnv`, `run_cmd`) are in the original files that the list above
+describes; those files are no longer in the tree.
+Like the scan above it is a text search. It does not see a goal that a `run_tac` block assigns
+directly, or a term that metaprogramming builds under another name, and it tells the `stop`
+tactic from a name called `stop` by where the word stands. It does not replace the axiom check.
+
 ## Statements
 
 `Main.lean` proves `riemannHypothesis` as `Formalism.VW.rh_of_every allChi`, where `allChi` says

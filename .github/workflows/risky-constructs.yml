@@ -1,0 +1,54 @@
+name: risky constructs
+
+# The full build passes when a proof uses `sorry` and when a pull request declares an axiom: the
+# first only warns, and the second compiles silently. This fails a pull request that adds one of
+# the constructs listed in scripts/risky-constructs.py to a Lean file under src/.
+#
+# Like challenge-files.yml, this runs the base branch's copy of the workflow, and the script it
+# runs is the base branch's too. The pull request's commits are fetched as git objects and read.
+# Nothing from the pull request is checked out or run, so a pull request cannot switch the check
+# off, and it needs no approval to run on a pull request from a fork.
+#
+# A text search is not a proof. It catches the accident; the axiom check in Comparator is what
+# counts.
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: Pull request to check
+        type: number
+        required: true
+
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: risky-constructs-${{ github.event.pull_request.number || inputs.pr_number }}
+  cancel-in-progress: true
+
+jobs:
+  scan:
+    name: No risky construct is added under src/
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout the trusted script
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+          sparse-checkout: scripts/risky-constructs.py
+          sparse-checkout-cone-mode: false
+      - name: Look for constructs the pull request adds
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          PR: ${{ github.event.pull_request.number || inputs.pr_number }}
+        run: |
+          base=$(gh api "repos/$REPO/pulls/$PR" --jq .base.sha)
+          head=$(gh api "repos/$REPO/pulls/$PR" --jq .head.sha)
+          python3 scripts/risky-constructs.py --annotate --work "$RUNNER_TEMP/pull" \
+            --remote "https://github.com/$REPO" --base "$base" --head "$head"

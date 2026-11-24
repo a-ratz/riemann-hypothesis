@@ -94,24 +94,29 @@ A text search is not a proof. The axiom check and kernel replay in Comparator ar
 
 **Pull requests.** `risky-constructs.yml` runs
 [`scripts/risky-constructs.py`](../scripts/risky-constructs.py) on every pull request. It fails a
-pull request that adds, to a Lean file under `src/`, one of the constructs in the script's list:
-`sorry` (also inside a longer name such as `mkSorry`), the `stop` tactic, `apply?`, `admit`, a
-declared axiom, `native_decide` and a `decide` that is given a config, `implemented_by`, `extern`,
-`unsafe`, `opaque`, a `debug.*` option, `skipKernelTC`, `addDecl`, `modifyEnv`, `run_cmd`, `#eval`
-and `initialize`, with their variants. It also fails a pull request that changes `lakefile.toml`,
-`lakefile.lean`, `lake-manifest.json` or `lean-toolchain`, or that puts a symbolic link or a
-submodule under `src/`: a library declared in the lakefile can live outside `src/`, and a link
-can point there. Comments and string literals are not read, except the `{...}` parts of an
-interpolated string, a name in guillemets is read as the name, and `src/Challenge.lean` is left
-out. In the rest of the current tree the script finds none of these.
-Three of them (`addDecl`, `modifyEnv`, `run_cmd`) are in the original files that the list above
-describes; those files are no longer in the tree.
-Like the scan above it is a text search. It does not see a goal that a `run_tac` block assigns
-directly, or a term that metaprogramming builds under another name, and it tells the `stop`
-tactic from a name called `stop` by what stands around the word, so a name `stop` that is
-followed by another word is taken for the tactic. An interpolated string is known by `s!`, `m!`,
-`f!` or one of core's macros before it; a macro of the tree's own that takes one is not. It does
-not replace the axiom check.
+pull request that adds, to a Lean file under `src/`, a line with one of the words in the script's
+list: `sorry`, `stop`, `admit`, `apply?`, `plausible`, `axiom`, `native`, a `decide` with a config
+on its line, `implemented_by`, `extern`, `unsafe`, `opaque`, `debug`, `addDecl`, `modifyEnv`,
+`run_cmd`, `#eval`, `initialize`, and their variants. It is a plain search. The whole text of
+each added or changed file is read, comments and strings included, and a word counts wherever its
+letters stand, also inside a longer name (`mkSorry`, `hstop`, `unsafeCast`). Only for `stop`,
+`admit`, `axiom` and `extern` the name must not go on behind the word (`admits`, `axioms`), and
+the lower-case `native` is passed over after a letter (`alternative`). So a word in a comment
+fails the check too. A line is reported unless the file had the same line, apart from blanks,
+where the pull request branched off, or the line stands in
+[`scripts/risky-constructs-allowed.txt`](../scripts/risky-constructs-allowed.txt) on the base
+branch. A symbolic link or a submodule under `src/` is reported as well. `src/Challenge.lean` is
+left out. In the rest of the tree at `ecc801f3`, 62,158 files, the words stand only at the end of
+names: `stop` on 18 lines (`hstop`, a field `stop`), `native` on 12 (`incl_native`) and `axiom` on
+3.
+Three of the words (`addDecl`, `modifyEnv`, `run_cmd`) are in the original files that the list
+above describes; those files are no longer in the tree.
+Like the scan above it is a text search. It does not see a term that metaprogramming builds
+under another name, a `decide` whose config stands on another line, or a line that was in the
+file already and means something else now, such as a `sorry` in a comment block whose ends a
+pull request removes. Mathlib's `hint` tactic, which closes a goal with `sorry` when nothing else
+does, is not in the list: `hint` is the name of a hypothesis on 18,441 lines of the tree. The
+check reads nothing outside `src/`. It does not replace the axiom check.
 
 ## Statements
 

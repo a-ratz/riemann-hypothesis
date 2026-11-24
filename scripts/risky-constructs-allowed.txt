@@ -1,0 +1,10 @@
+# Lines that may stand in a Lean file under src/ although they hold a word of
+# scripts/risky-constructs.py.
+#
+# One line each:
+#
+#     <path>: <the line as it stands in that file>
+#
+# Blanks at the ends of the line do not count, and a run of blanks inside it counts as one.
+# The check reports only lines that a pull request adds or changes, so nothing is listed here
+# for what the base branch already holds. A report prints the lines to add.
